@@ -7,9 +7,9 @@ Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://j
 ## 공사중입니다.
 
 ## Lab intern
-[cgroup](https://hipiphock.github.io/cgroup)
-[Schedule](https://hipiphock.github.io/schedule)
-[CFS](https://hipiphock.github.io/cfs)
+1. [cgroup](https://hipiphock.github.io/cgroup)
+2. [Schedule](https://hipiphock.github.io/schedule)
+3. [CFS](https://hipiphock.github.io/cfs)
 
 
 ### Markdown
