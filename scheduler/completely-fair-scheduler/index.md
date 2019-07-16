@@ -224,7 +224,6 @@ static inline u64 calc_delta_fair(u64 delta, struct sched_entity *se)
 }
 ```
 time slice값에 해당하는 vruntime값을 산출한다.
-```
-vruntime = time slice * weight<sub>0</sub> / weight
-```
+
+> vruntime = time slice * weight<sub>0</sub> / weight
 
