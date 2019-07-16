@@ -79,7 +79,7 @@ const u32 sched_prio_to_wmult[40] = {
 };
 ```
 
-# Code
+# Code - time slice
 
 ## sched_slice()
 kernel/sched/fair.c에 위치해있다.
@@ -192,3 +192,39 @@ static void __update_inv_weight(struct load_weight *lw)
 }
 ```
 inv_weight을 update하는 함수이다.
+
+# Code - vruntime의 산출
+## sched_vslice()
+kernel/sched/fair.c에 있는 함수이다.
+``` c
+/*
+ * We calculate the vruntime slice of a to-be-inserted task.
+ *
+ * vs = s/w
+ */
+static u64 sched_vslice(struct cfs_rq *cfs_rq, struct sched_entity *se)
+{
+	return calc_delta_fair(sched_slice(cfs_rq, se), se);
+}
+```
+sched_entity의 load에 해당하는 time slice값을 `sched_slice`함수를 통해 산출하고, 이를 통해서 vruntime을 구한다.
+
+## calc_delta_fair()
+kernel/sched/fair.c에 있는 함수이다.
+``` c
+/*
+ * delta /= w
+ */
+static inline u64 calc_delta_fair(u64 delta, struct sched_entity *se)
+{
+	if (unlikely(se->load.weight != NICE_0_LOAD))
+		delta = __calc_delta(delta, NICE_0_LOAD, &se->load);
+
+	return delta;
+}
+```
+time slice값에 해당하는 vruntime값을 산출한다.
+```
+vruntime = time slice * weight<sub>0</sub> / weight
+```
+
