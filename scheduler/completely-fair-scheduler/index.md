@@ -167,3 +167,28 @@ static inline u64 mul_u64_u32_shr(u64 a, u32 mul, unsigned int shift)
 처음에 weight의 inverse를 update하고, 수의 범위가 2<sup>32</sup>을 넘어가는 경우에는 scale down하는 작업을 한다.
 
 수의 범위를 잘 잡아줬다면, `mul_u64_u32_shr(delta_exec, fact, shift)`를 불러서 주어진 weight에 따른 slice를 계산한다.
+
+## \_\_update_inv_weight()
+kernel/sched/fair.c에 위치해있다.
+``` c
+#define WMULT_CONST	(~0U)
+#define WMULT_SHIFT	32
+
+static void __update_inv_weight(struct load_weight *lw)
+{
+	unsigned long w;
+
+	if (likely(lw->inv_weight))
+		return;
+
+	w = scale_load_down(lw->weight);
+
+	if (BITS_PER_LONG > 32 && unlikely(w >= WMULT_CONST))
+		lw->inv_weight = 1;
+	else if (unlikely(!w))
+		lw->inv_weight = WMULT_CONST;
+	else
+		lw->inv_weight = WMULT_CONST / w;
+}
+```
+inv_weight을 update하는 함수이다.
