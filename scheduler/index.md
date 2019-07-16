@@ -1,3 +1,8 @@
+[Home](https://hipiphock.github.io/)
+
+[context switch](https://hipiphock.github.io/scheduler/context-switch)
+[completely fair scheduler](https://hipiphock.github.io/scheduler/completely-fair-scheduler)
+
 # Overview
 기본적인 linux kernel의 scheduler에 대한 설명
 
