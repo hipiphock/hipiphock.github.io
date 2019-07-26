@@ -193,3 +193,29 @@ func (sched *Scheduler) scheduleOne() {
 }
 ```
 
+### schedule()
+``` go
+// schedule implements the scheduling algorithm and returns the suggested host.
+func (sched *Scheduler) schedule(pod *v1.Pod) (string, error) {
+	host, err := sched.config.Algorithm.Schedule(pod, sched.config.NodeLister)
+	if err != nil {
+		glog.V(1).Infof("Failed to schedule pod: %v/%v", pod.Namespace, pod.Name)
+		copied, cerr := api.Scheme.Copy(pod)
+		if cerr != nil {
+			runtime.HandleError(err)
+			return "", err
+		}
+		pod = copied.(*v1.Pod)
+		sched.config.Error(pod, err)
+		sched.config.Recorder.Eventf(pod, v1.EventTypeWarning, "FailedScheduling", "%v", err)
+		sched.config.PodConditionUpdater.Update(pod, &v1.PodCondition{
+			Type:    v1.PodScheduled,
+			Status:  v1.ConditionFalse,
+			Reason:  v1.PodReasonUnschedulable,
+			Message: err.Error(),
+		})
+		return "", err
+	}
+	return host, err
+}
+```
