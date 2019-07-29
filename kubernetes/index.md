@@ -14,7 +14,7 @@ kubernetes에서는 다음 과정을 거쳐서 scheduling을 한다.
 Kubernetes는 custom scheduler도 허용을 한다.
 
 # code
-
+Kubernetes는 custom scheduler를 실행시킬 수 있다.
 
 ### Run()
 ``` go
@@ -226,6 +226,9 @@ func (sched *Scheduler) schedule(pod *v1.Pod) (string, error) {
 }
 ```
 
+---------------------
+
+Kubernetes에서는 기본적으로 generic scheduler가 있다.
 
 ## Filtering
 Filtering is done by this function
