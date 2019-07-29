@@ -14,7 +14,7 @@ kubernetes에서는 다음 과정을 거쳐서 scheduling을 한다.
 Kubernetes는 custom scheduler도 허용을 한다.
 
 # code
-Kubernetes는 custom scheduler를 실행시킬 수 있다.
+Kubernetes는 user가 정의한 scheduler를 실행시킬 수 있으며, 따라서 다음과 같이 
 
 ### Run()
 ``` go
@@ -28,7 +28,7 @@ func (sched *Scheduler) Run() {
 	go wait.Until(sched.scheduleOne, 0, sched.config.StopEverything)
 }
 ```
-sched.scheduleOne()을 무한루프 돌자.
+`scheduleOne`함수를 goroutine마다 돌린다.
 
 ### scheduleOne()
 ``` go
@@ -198,6 +198,7 @@ func (sched *Scheduler) scheduleOne() {
 	}()
 }
 ```
+하나의 pod에 대해서 node를 찾아주는 함수이다.
 
 ### schedule()
 ``` go
@@ -225,10 +226,95 @@ func (sched *Scheduler) schedule(pod *v1.Pod) (string, error) {
 	return host, err
 }
 ```
+이 함수는 어떻게 돌아가는 함수냐...?
 
 ---------------------
 
-Kubernetes에서는 기본적으로 generic scheduler가 있다.
+Kubernetes에서는 기본적으로 generic scheduler가 있다. 이 generic scheduler는 pre-implemented algorithm들과 policy들이 있다.
+
+``` go
+// Schedule tries to schedule the given pod to one of the nodes in the node list.
+// If it succeeds, it will return the name of the node.
+// If it fails, it will return a FitError error with reasons.
+func (g *genericScheduler) Schedule(pod *v1.Pod, nodeLister algorithm.NodeLister, pluginContext *framework.PluginContext) (result ScheduleResult, err error) {
+	trace := utiltrace.New(fmt.Sprintf("Scheduling %s/%s", pod.Namespace, pod.Name))
+	defer trace.LogIfLong(100 * time.Millisecond)
+
+	if err := podPassesBasicChecks(pod, g.pvcLister); err != nil {
+		return result, err
+	}
+
+	// Run "prefilter" plugins.
+	prefilterStatus := g.framework.RunPrefilterPlugins(pluginContext, pod)
+	if !prefilterStatus.IsSuccess() {
+		return result, prefilterStatus.AsError()
+	}
+
+	nodes := nodeLister.ListNodes()
+	if err != nil {
+		return result, err
+	}
+	if len(nodes) == 0 {
+		return result, ErrNoNodesAvailable
+	}
+
+	if err := g.snapshot(); err != nil {
+		return result, err
+	}
+
+	trace.Step("Basic checks done")
+	startPredicateEvalTime := time.Now()
+	filteredNodes, failedPredicateMap, err := g.findNodesThatFit(pluginContext, pod, nodes)
+	if err != nil {
+		return result, err
+	}
+
+	if len(filteredNodes) == 0 {
+		return result, &FitError{
+			Pod:              pod,
+			NumAllNodes:      len(nodes),
+			FailedPredicates: failedPredicateMap,
+		}
+	}
+	trace.Step("Computing predicates done")
+	metrics.SchedulingAlgorithmPredicateEvaluationDuration.Observe(metrics.SinceInSeconds(startPredicateEvalTime))
+	metrics.DeprecatedSchedulingAlgorithmPredicateEvaluationDuration.Observe(metrics.SinceInMicroseconds(startPredicateEvalTime))
+	metrics.SchedulingLatency.WithLabelValues(metrics.PredicateEvaluation).Observe(metrics.SinceInSeconds(startPredicateEvalTime))
+	metrics.DeprecatedSchedulingLatency.WithLabelValues(metrics.PredicateEvaluation).Observe(metrics.SinceInSeconds(startPredicateEvalTime))
+
+	startPriorityEvalTime := time.Now()
+	// When only one node after predicate, just use it.
+	if len(filteredNodes) == 1 {
+		metrics.SchedulingAlgorithmPriorityEvaluationDuration.Observe(metrics.SinceInSeconds(startPriorityEvalTime))
+		metrics.DeprecatedSchedulingAlgorithmPriorityEvaluationDuration.Observe(metrics.SinceInMicroseconds(startPriorityEvalTime))
+		return ScheduleResult{
+			SuggestedHost:  filteredNodes[0].Name,
+			EvaluatedNodes: 1 + len(failedPredicateMap),
+			FeasibleNodes:  1,
+		}, nil
+	}
+
+	metaPrioritiesInterface := g.priorityMetaProducer(pod, g.nodeInfoSnapshot.NodeInfoMap)
+	priorityList, err := PrioritizeNodes(pod, g.nodeInfoSnapshot.NodeInfoMap, metaPrioritiesInterface, g.prioritizers, filteredNodes, g.extenders, g.framework, pluginContext)
+	if err != nil {
+		return result, err
+	}
+	trace.Step("Prioritizing done")
+	metrics.SchedulingAlgorithmPriorityEvaluationDuration.Observe(metrics.SinceInSeconds(startPriorityEvalTime))
+	metrics.DeprecatedSchedulingAlgorithmPriorityEvaluationDuration.Observe(metrics.SinceInMicroseconds(startPriorityEvalTime))
+	metrics.SchedulingLatency.WithLabelValues(metrics.PriorityEvaluation).Observe(metrics.SinceInSeconds(startPriorityEvalTime))
+	metrics.DeprecatedSchedulingLatency.WithLabelValues(metrics.PriorityEvaluation).Observe(metrics.SinceInSeconds(startPriorityEvalTime))
+
+	host, err := g.selectHost(priorityList)
+	trace.Step("Selecting host done")
+	return ScheduleResult{
+		SuggestedHost:  host,
+		EvaluatedNodes: len(filteredNodes) + len(failedPredicateMap),
+		FeasibleNodes:  len(filteredNodes),
+	}, err
+}
+```
+이 함수는 predication과 prioritizing을 `findNodesThatFit` 함수와 `PrioritizeNodes`함수를 통해서 
 
 ## Filtering
 Filtering is done by this function
