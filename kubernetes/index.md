@@ -219,3 +219,132 @@ func (sched *Scheduler) schedule(pod *v1.Pod) (string, error) {
 	return host, err
 }
 ```
+
+## Filtering
+Filtering is done by this function
+
+### findNodesThatFit()
+``` go
+// Filters the nodes to find the ones that fit based on the given predicate functions
+// Each node is passed through the predicate functions to determine if it is a fit
+func (g *genericScheduler) findNodesThatFit(pluginContext *framework.PluginContext, pod *v1.Pod, nodes []*v1.Node) ([]*v1.Node, FailedPredicateMap, error) {
+	var filtered []*v1.Node
+	failedPredicateMap := FailedPredicateMap{}
+
+
+	if len(g.predicates) == 0 {
+		filtered = nodes
+	} else {
+		allNodes := int32(g.cache.NodeTree().NumNodes())
+		numNodesToFind := g.numFeasibleNodesToFind(allNodes)
+
+
+		// Create filtered list with enough space to avoid growing it
+		// and allow assigning.
+		filtered = make([]*v1.Node, numNodesToFind)
+		errs := errors.MessageCountMap{}
+		var (
+			predicateResultLock sync.Mutex
+			filteredLen         int32
+		)
+
+
+		ctx, cancel := context.WithCancel(context.Background())
+
+
+		// We can use the same metadata producer for all nodes.
+		meta := g.predicateMetaProducer(pod, g.nodeInfoSnapshot.NodeInfoMap)
+
+
+		checkNode := func(i int) {
+			nodeName := g.cache.NodeTree().Next()
+
+
+			fits, failedPredicates, err := podFitsOnNode(
+				pod,
+				meta,
+				g.nodeInfoSnapshot.NodeInfoMap[nodeName],
+				g.predicates,
+				g.schedulingQueue,
+				g.alwaysCheckAllPredicates,
+			)
+			if err != nil {
+				predicateResultLock.Lock()
+				errs[err.Error()]++
+				predicateResultLock.Unlock()
+				return
+			}
+			if fits {
+				// Iterate each plugin to verify current node
+				status := g.framework.RunFilterPlugins(pluginContext, pod, nodeName)
+				if !status.IsSuccess() {
+					predicateResultLock.Lock()
+					failedPredicateMap[nodeName] = append(failedPredicateMap[nodeName],
+						predicates.NewFailureReason(status.Message()))
+					if status.Code() != framework.Unschedulable {
+						errs[status.Message()]++
+					}
+					predicateResultLock.Unlock()
+					return
+				}
+
+
+				length := atomic.AddInt32(&filteredLen, 1)
+				if length > numNodesToFind {
+					cancel()
+					atomic.AddInt32(&filteredLen, -1)
+				} else {
+					filtered[length-1] = g.nodeInfoSnapshot.NodeInfoMap[nodeName].Node()
+				}
+			} else {
+				predicateResultLock.Lock()
+				failedPredicateMap[nodeName] = failedPredicates
+				predicateResultLock.Unlock()
+			}
+		}
+
+
+		// Stops searching for more nodes once the configured number of feasible nodes
+		// are found.
+		workqueue.ParallelizeUntil(ctx, 16, int(allNodes), checkNode)
+
+
+		filtered = filtered[:filteredLen]
+		if len(errs) > 0 {
+			return []*v1.Node{}, FailedPredicateMap{}, errors.CreateAggregateFromMessageCountMap(errs)
+		}
+	}
+
+
+	if len(filtered) > 0 && len(g.extenders) != 0 {
+		for _, extender := range g.extenders {
+			if !extender.IsInterested(pod) {
+				continue
+			}
+			filteredList, failedMap, err := extender.Filter(pod, filtered, g.nodeInfoSnapshot.NodeInfoMap)
+			if err != nil {
+				if extender.IsIgnorable() {
+					klog.Warningf("Skipping extender %v as it returned error %v and has ignorable flag set",
+						extender, err)
+					continue
+				} else {
+					return []*v1.Node{}, FailedPredicateMap{}, err
+				}
+			}
+
+
+			for failedNodeName, failedMsg := range failedMap {
+				if _, found := failedPredicateMap[failedNodeName]; !found {
+					failedPredicateMap[failedNodeName] = []predicates.PredicateFailureReason{}
+				}
+				failedPredicateMap[failedNodeName] = append(failedPredicateMap[failedNodeName], predicates.NewFailureReason(failedMsg))
+			}
+			filtered = filteredList
+			if len(filtered) == 0 {
+				break
+			}
+		}
+	}
+	return filtered, failedPredicateMap, nil
+}
+```
