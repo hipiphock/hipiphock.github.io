@@ -11,6 +11,8 @@ kubernetes에서는 다음 과정을 거쳐서 scheduling을 한다.
 
 여기에서 가장 높은 priority를 가진 node가 선택된다.
 
+Kubernetes는 custom scheduler도 허용을 한다.
+
 # code
 
 
