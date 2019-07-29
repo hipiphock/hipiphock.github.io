@@ -1,14 +1,18 @@
 # Overview
-kubernetes는 Google에서 시작된 project로 docker를 이용해 더 쉽게 작업들을 관리하는? 그런걸 한다.
+**Kubernetes (K8s) is an open-source system for automating deployment, scaling, and management of containerized applications.**
 
 ## scheduling in kubernetes
+Kubernetes에서의 scheduling이란 pod에다가 node를 할당하는 것을 의미한다.
+
 kubernetes에서는 다음 과정을 거쳐서 scheduling을 한다.
 
-1. predicate - 각 pod를 위한 node를 선별하고
-2. priority function - node를 rank한다.
-3. 가장 높은 priority를 가진 node가 선택된다.
+1. predication - 각 pod를 위한 node를 선별한다.
+2. prioritize - 선별된 node들을 rank한다.
+
+여기에서 가장 높은 priority를 가진 node가 선택된다.
 
 # code
+
 
 ### Run()
 ``` go
@@ -219,6 +223,7 @@ func (sched *Scheduler) schedule(pod *v1.Pod) (string, error) {
 	return host, err
 }
 ```
+
 
 ## Filtering
 Filtering is done by this function
