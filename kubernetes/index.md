@@ -54,8 +54,14 @@ func (sched *Scheduler) scheduleOne() {
 
 
 	klog.V(3).Infof("Attempting to schedule pod: %v/%v", pod.Namespace, pod.Name)
+```
+다음 pod를 고른다. 이때, schedulerQueue가 닫혀있으면 pod가 nil일 수도 있다. 이런 경우에는 그냥 return을 한다.
 
+@TODO: scheduelrQueue가 언제 닫히게 되는지 찾기
 
+DeletionTimestamp가 nil인지 아닌지는 왜 찾는걸까?
+
+``` go
 	// Synchronously attempt to find a fit for the pod.
 	start := time.Now()
 	pluginContext := framework.NewPluginContext()
@@ -93,8 +99,9 @@ func (sched *Scheduler) scheduleOne() {
 	// Tell the cache to assume that a pod now is running on a given node, even though it hasn't been bound yet.
 	// This allows us to keep scheduling without waiting on binding to occur.
 	assumedPod := pod.DeepCopy()
-
-
+```
+Synchronous하게 pod에 맞는 node를 찾는다. 이를 위해서 시작 시간을 지금으로 잡고, 
+``` go
 	// Assume volumes first before assuming the pod.
 	//
 	// If all volumes are completely bound, then allBound is true and binding will be skipped.
