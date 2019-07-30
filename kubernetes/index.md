@@ -32,6 +32,8 @@ func (sched *Scheduler) Run() {
 ```
 `scheduleOne`함수를 goroutine마다 돌린다.
 
+sched.config.WaitForCacheSync()은 뭐하는 애지? CacheSync? cache가 여기서 어떻게 무슨 역할을 하길래 중요하지?
+
 여기에서 goroutine은 lightweight process, 즉 thread를 말한다.
 
 ### scheduleOne()
@@ -56,6 +58,8 @@ func (sched *Scheduler) scheduleOne() {
 	klog.V(3).Infof("Attempting to schedule pod: %v/%v", pod.Namespace, pod.Name)
 ```
 다음 pod를 고른다. 이때, schedulerQueue가 닫혀있으면 pod가 nil일 수도 있다. 이런 경우에는 그냥 return을 한다.
+
+NextPod는 어떻게 생긴 놈이지? pod를 어떻게 구하는거지?
 
 @TODO: scheduelrQueue가 언제 닫히게 되는지 찾기
 
@@ -101,6 +105,7 @@ DeletionTimestamp가 nil인지 아닌지는 왜 찾는걸까?
 	assumedPod := pod.DeepCopy()
 ```
 Synchronous하게 pod에 맞는 node를 찾는다. 이를 위해서 시작 시간을 지금으로 잡고, 
+
 ``` go
 	// Assume volumes first before assuming the pod.
 	//
