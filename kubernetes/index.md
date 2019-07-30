@@ -113,7 +113,11 @@ preemption이 일어난 이후에는 기존의 pod에 대해서는 error message
 	// Tell the cache to assume that a pod now is running on a given node, even though it hasn't been bound yet.
 	// This allows us to keep scheduling without waiting on binding to occur.
 	assumedPod := pod.DeepCopy()
-	
+```
+pod가 bound가 되지 않다고 하더라도 pod가 이제 주어진 node에서 돌아간다고 cache에게 알린다.
+
+이를 통해서 binding을 기다릴 필요가 없어진다.
+``` go
 	// Assume volumes first before assuming the pod.
 	//
 	// If all volumes are completely bound, then allBound is true and binding will be skipped.
@@ -127,8 +131,11 @@ preemption이 일어난 이후에는 기존의 pod에 대해서는 error message
 		metrics.PodScheduleErrors.Inc()
 		return
 	}
+```
+Volume과 binding을 하는 작업.
 
-
+@TODO: pod와 volume사이에서의 binding은 어떻게 일어나는가?
+``` go
 	// Run "reserve" plugins.
 	if sts := fwk.RunReservePlugins(pluginContext, assumedPod, scheduleResult.SuggestedHost); !sts.IsSuccess() {
 		sched.recordSchedulingFailure(assumedPod, sts.AsError(), SchedulerError, sts.Message())
