@@ -14,7 +14,9 @@ kubernetes에서는 다음 과정을 거쳐서 scheduling을 한다.
 Kubernetes는 custom scheduler도 허용을 한다.
 
 # code
-Kubernetes는 user가 정의한 scheduler를 실행시킬 수 있으며, 따라서 다음과 같이 
+Kubernetes는 user가 정의한 scheduler를 실행시킬 수 있으며, 아니면 기존에 구현된 scheduler를 그대로 사용할 수도 있다.
+
+어떠한 방식을 사용하느냐에 따라서 작동하는 코드가 달라지는 듯 하다. 아직 정확한 원리는 모르겠다.
 
 ### Run()
 ``` go
@@ -29,6 +31,8 @@ func (sched *Scheduler) Run() {
 }
 ```
 `scheduleOne`함수를 goroutine마다 돌린다.
+
+여기에서 goroutine은 lightweight process, 즉 thread를 말한다.
 
 ### scheduleOne()
 ``` go
@@ -231,6 +235,8 @@ func (sched *Scheduler) schedule(pod *v1.Pod) (string, error) {
 ---------------------
 
 Kubernetes에서는 기본적으로 generic scheduler가 있다. 이 generic scheduler는 pre-implemented algorithm들과 policy들이 있다.
+
+기존에 봤던 코드들은 custom made scheduler에 대해서 돌아가는 함수들이고, 원래 구현된 함수는 아래와 같다.
 
 ``` go
 // Schedule tries to schedule the given pod to one of the nodes in the node list.
