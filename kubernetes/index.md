@@ -98,15 +98,22 @@ DeletionTimestamp가 nil인지 아닌지는 왜 찾는걸까?
 		}
 		return
 	}
+```
+우선 `schedule()`함수를 돌린다.
+
+만약 에러가 생기게 된다면, preemption을 고려해야한다. Preemption이 disable 되어있는 경우, 에러메세지를 출력하며, 그렇지 않은 경우에는 preemption이 일어나게 된다.
+
+preemption은 어떤 식으로 일어나는거지?
+
+preemption이 일어난 이후에는 기존의 pod에 대해서는 error message를 부르고 return한다.
+
+``` go
 	metrics.SchedulingAlgorithmLatency.Observe(metrics.SinceInSeconds(start))
 	metrics.DeprecatedSchedulingAlgorithmLatency.Observe(metrics.SinceInMicroseconds(start))
 	// Tell the cache to assume that a pod now is running on a given node, even though it hasn't been bound yet.
 	// This allows us to keep scheduling without waiting on binding to occur.
 	assumedPod := pod.DeepCopy()
-```
-Synchronous하게 pod에 맞는 node를 찾는다. 이를 위해서 시작 시간을 지금으로 잡고, 
-
-``` go
+	
 	// Assume volumes first before assuming the pod.
 	//
 	// If all volumes are completely bound, then allBound is true and binding will be skipped.
