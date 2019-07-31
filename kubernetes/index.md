@@ -268,8 +268,7 @@ Algorithm? pod? deepcopy?
 
 Kubernetes에서는 기본적으로 generic scheduler가 있다. 이 generic scheduler는 pre-implemented algorithm들과 policy들이 있다.
 
-기존에 봤던 코드들은 custom made scheduler에 대해서 돌아가는 함수들이고, 원래 구현된 함수는 아래와 같다.
-
+기존에 봤던 코드들은 custom made scheduler에 대해서 돌아가는 함수들이며, default scheduler는 generic scheduler에 정의되어 있다.
 ``` go
 // Schedule tries to schedule the given pod to one of the nodes in the node list.
 // If it succeeds, it will return the name of the node.
@@ -352,10 +351,7 @@ func (g *genericScheduler) Schedule(pod *v1.Pod, nodeLister algorithm.NodeLister
 	}, err
 }
 ```
-이 함수는 predication과 prioritizing을 `findNodesThatFit` 함수와 `PrioritizeNodes`함수를 통해서 
-
-## Filtering
-Filtering is done by this function
+이 함수는 predication과 prioritizing을 `findNodesThatFit` 함수와 `PrioritizeNodes`함수를 통해서 filtering과 prioritize를 한다.
 
 ### findNodesThatFit()
 ``` go
