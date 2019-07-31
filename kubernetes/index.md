@@ -142,8 +142,11 @@ Volume과 binding을 하는 작업.
 		metrics.PodScheduleErrors.Inc()
 		return
 	}
+```
+plugin을 돌리는 파트.
 
-
+근데 여기에서 plugin이라는게 뭘 의미하는지 모르겠다...
+``` go
 	// assume modifies `assumedPod` by setting NodeName=scheduleResult.SuggestedHost
 	err = sched.assume(assumedPod, scheduleResult.SuggestedHost)
 	if err != nil {
@@ -153,6 +156,11 @@ Volume과 binding을 하는 작업.
 		fwk.RunUnreservePlugins(pluginContext, assumedPod, scheduleResult.SuggestedHost)
 		return
 	}
+```
+`assumePod`는 위에서 pod를 deep copy한 것이다.
+
+여기에서 나오는 `assume()`함수는 cache에게 pod가 이미 cache 안에 있다고 signal을 cache에게 보내는 함수이다.
+``` go
 	// bind the pod to its host asynchronously (we can do this b/c of the assumption step above).
 	go func() {
 		// Bind volumes first before Pod
@@ -228,7 +236,15 @@ Volume과 binding을 하는 작업.
 	}()
 }
 ```
-하나의 pod에 대해서 node를 찾아주는 함수이다.
+비동기적으로 pod를 host와 연결해주는 부분이다. `go`를 통해 thread를 쓰는 것을 알 수 있다.
+
+만약 bound가 다 안된 경우에는 bound를 해준다.
+
+bound가 다 되었다면 "permit" plugin을 돌린다. 이 친구는 뭐하는 친구일까?
+
+그 다음에는 "prebind" plugin을 돌린다. 이 친구는 뭐하는 친구일까?
+
+왜 또 bind를 call하지?
 
 ### schedule()
 ``` go
