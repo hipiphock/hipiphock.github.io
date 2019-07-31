@@ -32,7 +32,9 @@ func (sched *Scheduler) Run() {
 ```
 `scheduleOne`함수를 goroutine마다 돌린다.
 
-sched.config.WaitForCacheSync()은 뭐하는 애지? CacheSync? cache가 여기서 어떻게 무슨 역할을 하길래 중요하지?
+sched.config.WaitForCacheSync()은 뭐하는 애지? CacheSync? 
+
+@TODO: cache가 하는 일에 대해서 공부하기.
 
 여기에서 goroutine은 lightweight process, 즉 thread를 말한다.
 
