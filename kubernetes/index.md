@@ -250,31 +250,19 @@ bound가 다 되었다면 "permit" plugin을 돌린다. 이 친구는 뭐하는 
 
 ### schedule()
 ``` go
-// schedule implements the scheduling algorithm and returns the suggested host.
-func (sched *Scheduler) schedule(pod *v1.Pod) (string, error) {
-	host, err := sched.config.Algorithm.Schedule(pod, sched.config.NodeLister)
+// schedule implements the scheduling algorithm and returns the suggested result(host,
+// evaluated nodes number,feasible nodes number).
+func (sched *Scheduler) schedule(pod *v1.Pod, pluginContext *framework.PluginContext) (core.ScheduleResult, error) {
+	result, err := sched.config.Algorithm.Schedule(pod, sched.config.NodeLister, pluginContext)
 	if err != nil {
-		glog.V(1).Infof("Failed to schedule pod: %v/%v", pod.Namespace, pod.Name)
-		copied, cerr := api.Scheme.Copy(pod)
-		if cerr != nil {
-			runtime.HandleError(err)
-			return "", err
-		}
-		pod = copied.(*v1.Pod)
-		sched.config.Error(pod, err)
-		sched.config.Recorder.Eventf(pod, v1.EventTypeWarning, "FailedScheduling", "%v", err)
-		sched.config.PodConditionUpdater.Update(pod, &v1.PodCondition{
-			Type:    v1.PodScheduled,
-			Status:  v1.ConditionFalse,
-			Reason:  v1.PodReasonUnschedulable,
-			Message: err.Error(),
-		})
-		return "", err
+		pod = pod.DeepCopy()
+		sched.recordSchedulingFailure(pod, err, v1.PodReasonUnschedulable, err.Error())
+		return core.ScheduleResult{}, err
 	}
-	return host, err
+	return result, err
 }
 ```
-이 함수는 어떻게 돌아가는 함수냐...?
+Algorithm? pod? deepcopy?
 
 ---------------------
 
