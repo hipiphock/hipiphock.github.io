@@ -530,7 +530,7 @@ checkNode라는 inner function을 정의한 뒤, 이를 parallelize하게 돌린
 ```
 
 ### podFitsOnNode
-실질적으로 node를 선택하는 함수이다.
+node를 실질적으로 filtering하는 함수이다.
 ``` go
 // podFitsOnNode checks whether a node given by NodeInfo satisfies the given predicate functions.
 // For given pod, podFitsOnNode will check if any equivalent pod exists and try to reuse its cached
@@ -546,10 +546,12 @@ checkNode라는 inner function을 정의한 뒤, 이를 parallelize하게 돌린
 이 함수는 Schedule과 Preempt에서 불리게 된다.
 
 * Schedule에서 불리게 된 경우, pod가 node에 schedule될 수 있는지를 test한다.
- 
+
+  * 여기에서 중요한 점은 node에 이미 있는 모든 pod들과, 추가로 schedule 되어야 하는 pod보다 높은 priority를 가진 node에 대해서도 해당되기 때문이다.
+
 * Preempt에서 불리게 된 경우, preemption의 victim을 없애고 해당 pod를 넣어야 한다.
   
-    * 이때, victim의 선택은 `SelectVictimsOnNode()`를 통해서 결정한다.
+  * 이때, victim의 선택은 `SelectVictimsOnNode()`를 통해서 결정한다.
 ``` go
 func podFitsOnNode(
 	pod *v1.Pod,
@@ -560,7 +562,6 @@ func podFitsOnNode(
 	alwaysCheckAllPredicates bool,
 ) (bool, []predicates.PredicateFailureReason, error) {
 	var failedPredicates []predicates.PredicateFailureReason
-
 
 	podsAdded := false
 	// We run predicates twice in some cases. If the node has greater or equal priority
@@ -622,7 +623,9 @@ func podFitsOnNode(
 	return len(failedPredicates) == 0, failedPredicates, nil
 }
 ```
-node를 실질적으로 filtering하는 함수이다.
+특정 경우에는 predicate를 두번 수행하게 된다. 만약 node가 지명된 pod로 더 높거나 같은 우선순위를 가진 pode를 가지고 있다면 우리는 그 pod를 meta와 nodeInfo에 추가한다.
+
+만약 모든 predicate가 성공한다면, 지명된 pod가 추가되지 않았을 때 돌린다.
 
 ## prioritizing
 `PrioritizeNodes` 함수에서 점수를 준다. 0-10점 사이로, 0은 제일 낮은 priority, 10은 제일 높은 priority다.
