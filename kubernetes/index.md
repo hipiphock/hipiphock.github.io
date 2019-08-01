@@ -529,6 +529,91 @@ checkNode라는 inner function을 정의한 뒤, 이를 parallelize하게 돌린
 }
 ```
 
+### podFitsOnNode
+``` go
+// podFitsOnNode checks whether a node given by NodeInfo satisfies the given predicate functions.
+// For given pod, podFitsOnNode will check if any equivalent pod exists and try to reuse its cached
+// predicate results as possible.
+// This function is called from two different places: Schedule and Preempt.
+// When it is called from Schedule, we want to test whether the pod is schedulable
+// on the node with all the existing pods on the node plus higher and equal priority
+// pods nominated to run on the node.
+// When it is called from Preempt, we should remove the victims of preemption and
+// add the nominated pods. Removal of the victims is done by SelectVictimsOnNode().
+// It removes victims from meta and NodeInfo before calling this function.
+func podFitsOnNode(
+	pod *v1.Pod,
+	meta predicates.PredicateMetadata,
+	info *schedulernodeinfo.NodeInfo,
+	predicateFuncs map[string]predicates.FitPredicate,
+	queue internalqueue.SchedulingQueue,
+	alwaysCheckAllPredicates bool,
+) (bool, []predicates.PredicateFailureReason, error) {
+	var failedPredicates []predicates.PredicateFailureReason
+
+
+	podsAdded := false
+	// We run predicates twice in some cases. If the node has greater or equal priority
+	// nominated pods, we run them when those pods are added to meta and nodeInfo.
+	// If all predicates succeed in this pass, we run them again when these
+	// nominated pods are not added. This second pass is necessary because some
+	// predicates such as inter-pod affinity may not pass without the nominated pods.
+	// If there are no nominated pods for the node or if the first run of the
+	// predicates fail, we don't run the second pass.
+	// We consider only equal or higher priority pods in the first pass, because
+	// those are the current "pod" must yield to them and not take a space opened
+	// for running them. It is ok if the current "pod" take resources freed for
+	// lower priority pods.
+	// Requiring that the new pod is schedulable in both circumstances ensures that
+	// we are making a conservative decision: predicates like resources and inter-pod
+	// anti-affinity are more likely to fail when the nominated pods are treated
+	// as running, while predicates like pod affinity are more likely to fail when
+	// the nominated pods are treated as not running. We can't just assume the
+	// nominated pods are running because they are not running right now and in fact,
+	// they may end up getting scheduled to a different node.
+	for i := 0; i < 2; i++ {
+		metaToUse := meta
+		nodeInfoToUse := info
+		if i == 0 {
+			podsAdded, metaToUse, nodeInfoToUse = addNominatedPods(pod, meta, info, queue)
+		} else if !podsAdded || len(failedPredicates) != 0 {
+			break
+		}
+		for _, predicateKey := range predicates.Ordering() {
+			var (
+				fit     bool
+				reasons []predicates.PredicateFailureReason
+				err     error
+			)
+			//TODO (yastij) : compute average predicate restrictiveness to export it as Prometheus metric
+			if predicate, exist := predicateFuncs[predicateKey]; exist {
+				fit, reasons, err = predicate(pod, metaToUse, nodeInfoToUse)
+				if err != nil {
+					return false, []predicates.PredicateFailureReason{}, err
+				}
+
+
+				if !fit {
+					// eCache is available and valid, and predicates result is unfit, record the fail reasons
+					failedPredicates = append(failedPredicates, reasons...)
+					// if alwaysCheckAllPredicates is false, short circuit all predicates when one predicate fails.
+					if !alwaysCheckAllPredicates {
+						klog.V(5).Infoln("since alwaysCheckAllPredicates has not been set, the predicate " +
+							"evaluation is short circuited and there are chances " +
+							"of other predicates failing as well.")
+						break
+					}
+				}
+			}
+		}
+	}
+
+
+	return len(failedPredicates) == 0, failedPredicates, nil
+}
+```
+node를 실질적으로 filtering하는 함수이다.
+
 ## prioritizing
 `PrioritizeNodes` 함수에서 점수를 준다. 0-10점 사이로, 0은 제일 낮은 priority, 10은 제일 높은 priority다.
 ``` go
