@@ -18,6 +18,8 @@ Kubernetes는 user가 정의한 scheduler를 실행시킬 수 있으며, 아니�
 
 어떠한 방식을 사용하느냐에 따라서 작동하는 코드가 달라지는 듯 하다. 아직 정확한 원리는 모르겠다.
 
+## User-made scheduler
+
 ### Run()
 ``` go
 // Run begins watching and scheduling.
@@ -264,7 +266,7 @@ func (sched *Scheduler) schedule(pod *v1.Pod, pluginContext *framework.PluginCon
 ```
 Algorithm? pod? deepcopy?
 
----------------------
+## Basic scheduler
 
 Kubernetes에서는 기본적으로 generic scheduler가 있다. 이 generic scheduler는 pre-implemented algorithm들과 policy들이 있다.
 
@@ -280,13 +282,21 @@ func (g *genericScheduler) Schedule(pod *v1.Pod, nodeLister algorithm.NodeLister
 	if err := podPassesBasicChecks(pod, g.pvcLister); err != nil {
 		return result, err
 	}
+```
+Generic scheduler의 `Schedule()`함수는 주어진 pod를 node list에 있는 한 node와 짝지어준다.
 
+tracing은 `defer`를 통해서 최대한 나중에 실행될 수 있도록 한다.
+``` go
 	// Run "prefilter" plugins.
 	prefilterStatus := g.framework.RunPrefilterPlugins(pluginContext, pod)
 	if !prefilterStatus.IsSuccess() {
 		return result, prefilterStatus.AsError()
 	}
+```
+filtering과 관련해서 뭔가 하는 plugin인가보다.
 
+실패하면 error와 result를 return한다.
+``` go
 	nodes := nodeLister.ListNodes()
 	if err != nil {
 		return result, err
@@ -318,7 +328,11 @@ func (g *genericScheduler) Schedule(pod *v1.Pod, nodeLister algorithm.NodeLister
 	metrics.DeprecatedSchedulingAlgorithmPredicateEvaluationDuration.Observe(metrics.SinceInMicroseconds(startPredicateEvalTime))
 	metrics.SchedulingLatency.WithLabelValues(metrics.PredicateEvaluation).Observe(metrics.SinceInSeconds(startPredicateEvalTime))
 	metrics.DeprecatedSchedulingLatency.WithLabelValues(metrics.PredicateEvaluation).Observe(metrics.SinceInSeconds(startPredicateEvalTime))
+```
+predication은 여기에서 발생한다. `findNodesThatFit()`을 통해서 node들을 가져오며, 만약 가져온 node의 수가 0개라면 error를 return하게 된다.
 
+`metrics`가 무슨 작업을 하는지는 난 잘 모르겠다.
+``` go
 	startPriorityEvalTime := time.Now()
 	// When only one node after predicate, just use it.
 	if len(filteredNodes) == 1 {
@@ -330,7 +344,11 @@ func (g *genericScheduler) Schedule(pod *v1.Pod, nodeLister algorithm.NodeLister
 			FeasibleNodes:  1,
 		}, nil
 	}
+```
+predicate가 끝난다면 prioritize를 해야하지만, 만약 node의 수가 1개라면 그런 것이 의미가 없으니 그냥 바로 매칭시켜버린다.
 
+그렇지 않다면 prioritize 작업을 한다.
+``` go
 	metaPrioritiesInterface := g.priorityMetaProducer(pod, g.nodeInfoSnapshot.NodeInfoMap)
 	priorityList, err := PrioritizeNodes(pod, g.nodeInfoSnapshot.NodeInfoMap, metaPrioritiesInterface, g.prioritizers, filteredNodes, g.extenders, g.framework, pluginContext)
 	if err != nil {
@@ -351,9 +369,10 @@ func (g *genericScheduler) Schedule(pod *v1.Pod, nodeLister algorithm.NodeLister
 	}, err
 }
 ```
-이 함수는 predication과 prioritizing을 `findNodesThatFit` 함수와 `PrioritizeNodes`함수를 통해서 filtering과 prioritize를 한다.
+`PrioritizeNodes()`함수를 통해서 prioritize를 하는데, 이는 아래에서 더 자세하게 보도록 하자.
 
 ### findNodesThatFit()
+predicate를 하는 함수이다.
 ``` go
 // Filters the nodes to find the ones that fit based on the given predicate functions
 // Each node is passed through the predicate functions to determine if it is a fit
@@ -364,10 +383,12 @@ func (g *genericScheduler) findNodesThatFit(pluginContext *framework.PluginConte
 
 	if len(g.predicates) == 0 {
 		filtered = nodes
+```
+`g.predicates`가 무슨 뜻이지? predicate에도 무슨 level같은게 있나?
+``` go
 	} else {
 		allNodes := int32(g.cache.NodeTree().NumNodes())
 		numNodesToFind := g.numFeasibleNodesToFind(allNodes)
-
 
 		// Create filtered list with enough space to avoid growing it
 		// and allow assigning.
@@ -378,10 +399,11 @@ func (g *genericScheduler) findNodesThatFit(pluginContext *framework.PluginConte
 			filteredLen         int32
 		)
 
-
 		ctx, cancel := context.WithCancel(context.Background())
+```
 
 
+``` go
 		// We can use the same metadata producer for all nodes.
 		meta := g.predicateMetaProducer(pod, g.nodeInfoSnapshot.NodeInfoMap)
 
