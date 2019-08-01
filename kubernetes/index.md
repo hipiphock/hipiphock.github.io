@@ -272,6 +272,30 @@ Kubernetes에서는 기본적으로 generic scheduler가 있다. 이 generic sch
 
 기존에 봤던 코드들은 custom made scheduler에 대해서 돌아가는 함수들이며, default scheduler는 generic scheduler에 정의되어 있다.
 ``` go
+type genericScheduler struct {
+	cache                    internalcache.Cache
+	schedulingQueue          internalqueue.SchedulingQueue
+	predicates               map[string]predicates.FitPredicate
+	priorityMetaProducer     priorities.PriorityMetadataProducer
+	predicateMetaProducer    predicates.PredicateMetadataProducer
+	prioritizers             []priorities.PriorityConfig
+	framework                framework.Framework
+	extenders                []algorithm.SchedulerExtender
+	lastNodeIndex            uint64
+	alwaysCheckAllPredicates bool
+	nodeInfoSnapshot         *internalcache.NodeInfoSnapshot
+	volumeBinder             *volumebinder.VolumeBinder
+	pvcLister                corelisters.PersistentVolumeClaimLister
+	pdbLister                algorithm.PDBLister
+	disablePreemption        bool
+	percentageOfNodesToScore int32
+	enableNonPreempting      bool
+}
+```
+`genericScheduler`는 다음과 같은 멤버들을 가지고 있다.
+
+아니 진짜 모르는게 너무 많잖아... ㅠㅠ
+``` go
 // Schedule tries to schedule the given pod to one of the nodes in the node list.
 // If it succeeds, it will return the name of the node.
 // If it fails, it will return a FitError error with reasons.
@@ -401,12 +425,12 @@ func (g *genericScheduler) findNodesThatFit(pluginContext *framework.PluginConte
 
 		ctx, cancel := context.WithCancel(context.Background())
 ```
+`g.predicates`가 `false`가 된다면 `else`문에 들어가게 된다.
 
-
+이때 돌릴 수 있는 node를 찾는데, 일단 여기에서는 list만 만드는 듯 하다.
 ``` go
 		// We can use the same metadata producer for all nodes.
 		meta := g.predicateMetaProducer(pod, g.nodeInfoSnapshot.NodeInfoMap)
-
 
 		checkNode := func(i int) {
 			nodeName := g.cache.NodeTree().Next()
@@ -455,12 +479,16 @@ func (g *genericScheduler) findNodesThatFit(pluginContext *framework.PluginConte
 			}
 		}
 
-
 		// Stops searching for more nodes once the configured number of feasible nodes
 		// are found.
 		workqueue.ParallelizeUntil(ctx, 16, int(allNodes), checkNode)
+```
+checkNode라는 inner function을 정의한 뒤, 이를 parallelize하게 돌린다.
 
+여기에서 진짜 filtering이 일어난다. 아마도.
 
+`podFitsOnNode()`함수를 통해 predicate function에 맞게 filtering을 한다.
+``` go
 		filtered = filtered[:filteredLen]
 		if len(errs) > 0 {
 			return []*v1.Node{}, FailedPredicateMap{}, errors.CreateAggregateFromMessageCountMap(errs)
