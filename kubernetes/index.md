@@ -530,6 +530,7 @@ checkNode라는 inner function을 정의한 뒤, 이를 parallelize하게 돌린
 ```
 
 ### podFitsOnNode
+실질적으로 node를 선택하는 함수이다.
 ``` go
 // podFitsOnNode checks whether a node given by NodeInfo satisfies the given predicate functions.
 // For given pod, podFitsOnNode will check if any equivalent pod exists and try to reuse its cached
@@ -541,6 +542,15 @@ checkNode라는 inner function을 정의한 뒤, 이를 parallelize하게 돌린
 // When it is called from Preempt, we should remove the victims of preemption and
 // add the nominated pods. Removal of the victims is done by SelectVictimsOnNode().
 // It removes victims from meta and NodeInfo before calling this function.
+```
+이 함수는 Schedule과 Preempt에서 불리게 된다.
+
+* Schedule에서 불리게 된 경우, pod가 node에 schedule될 수 있는지를 test한다.
+ 
+* Preempt에서 불리게 된 경우, preemption의 victim을 없애고 해당 pod를 넣어야 한다.
+  
+    * 이때, victim의 선택은 `SelectVictimsOnNode()`를 통해서 결정한다.
+``` go
 func podFitsOnNode(
 	pod *v1.Pod,
 	meta predicates.PredicateMetadata,
