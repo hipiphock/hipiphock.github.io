@@ -542,6 +542,14 @@ node를 실질적으로 filtering하는 함수이다.
 // When it is called from Preempt, we should remove the victims of preemption and
 // add the nominated pods. Removal of the victims is done by SelectVictimsOnNode().
 // It removes victims from meta and NodeInfo before calling this function.
+func podFitsOnNode(
+	pod *v1.Pod,
+	meta predicates.PredicateMetadata,
+	info *schedulernodeinfo.NodeInfo,
+	predicateFuncs map[string]predicates.FitPredicate,
+	queue internalqueue.SchedulingQueue,
+	alwaysCheckAllPredicates bool,
+) (bool, []predicates.PredicateFailureReason, error) {
 ```
 이 함수는 Schedule과 Preempt에서 불리게 된다.
 
@@ -553,14 +561,6 @@ node를 실질적으로 filtering하는 함수이다.
   
   * 이때, victim의 선택은 `SelectVictimsOnNode()`를 통해서 결정한다.
 ``` go
-func podFitsOnNode(
-	pod *v1.Pod,
-	meta predicates.PredicateMetadata,
-	info *schedulernodeinfo.NodeInfo,
-	predicateFuncs map[string]predicates.FitPredicate,
-	queue internalqueue.SchedulingQueue,
-	alwaysCheckAllPredicates bool,
-) (bool, []predicates.PredicateFailureReason, error) {
 	var failedPredicates []predicates.PredicateFailureReason
 
 	podsAdded := false
@@ -582,6 +582,13 @@ func podFitsOnNode(
 	// the nominated pods are treated as not running. We can't just assume the
 	// nominated pods are running because they are not running right now and in fact,
 	// they may end up getting scheduled to a different node.
+```
+Predicate를 두번 하는 경우가 있다. node가 현재 pod보다 더 우선순위가 높거나 같은 pod를 가지고 있으면, meta와 nodeInfo에 pod들이 더해질 때 돌리게 된다.
+
+만약 모든 predicate가 이 pass에 성공하게 되면, 우리는 지명된 pod가 더해지지 않을때 다시 한번 돌리게 된다.
+
+이 두 번째 pass는 꼭 필요한데, 지명된 pod 없이 inter-pod affinity는 pass하지 못할 수도 있기 때문이다.
+``` go
 	for i := 0; i < 2; i++ {
 		metaToUse := meta
 		nodeInfoToUse := info
