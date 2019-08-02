@@ -635,10 +635,17 @@ Predicate를 두번 하는 경우가 있다. node가 현재 pod보다 더 우선
 if i == 0 {
 	podsAdded, metaToUse, nodeInfoToUse = addNominatedPods(pod, meta, info, queue)
 ```
+여기에서 `addNominatedPods()`는 같거나 더 높은 우선순위를 가진 pod에서 일어난다.
 
 
 ## prioritizing
-`PrioritizeNodes` 함수에서 점수를 준다. 0-10점 사이로, 0은 제일 낮은 priority, 10은 제일 높은 priority다.
+priority는 `PrioritizeNodes()` 함수를 통해서 결정된다.
+
+`PrioritizeNodes()`는 parallel하게 individual priority function을 돌린다.
+
+각각의 priority function은 0부터 10점 사이의 점수를 가지고, 0은 가장 낮은 priority 점수이다.
+
+각 priority function은 weight를 가질 수도 있다. 이때, priority function에 의해 return된 node score는 weight과 곱해진다.
 ``` go
 // PrioritizeNodes prioritizes the nodes by running the individual priority functions in parallel.
 // Each priority function is expected to set a score of 0-10
@@ -668,8 +675,9 @@ func PrioritizeNodes(
 		}
 		return result, nil
 	}
-
-
+```
+만약 priority config가 없다면, equal한 priority를 생각하면 된다.
+``` go
 	var (
 		mu   = sync.Mutex{}
 		wg   = sync.WaitGroup{}
