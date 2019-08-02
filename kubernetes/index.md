@@ -482,20 +482,17 @@ func (g *genericScheduler) findNodesThatFit(pluginContext *framework.PluginConte
 		// Stops searching for more nodes once the configured number of feasible nodes
 		// are found.
 		workqueue.ParallelizeUntil(ctx, 16, int(allNodes), checkNode)
-```
-checkNode라는 inner function을 정의한 뒤, 이를 parallelize하게 돌린다.
-
-여기에서 진짜 filtering이 일어난다. 아마도.
-
-`podFitsOnNode()`함수를 통해 predicate function에 맞게 filtering을 한다.
-``` go
+		
 		filtered = filtered[:filteredLen]
 		if len(errs) > 0 {
 			return []*v1.Node{}, FailedPredicateMap{}, errors.CreateAggregateFromMessageCountMap(errs)
 		}
 	}
+```
+checkNode라는 inner function을 정의한 뒤, 이를 parallelize하게 돌린다.
 
-
+`podFitsOnNode()`함수를 통해 predicate function에 맞게 filtering을 한다.
+``` go
 	if len(filtered) > 0 && len(g.extenders) != 0 {
 		for _, extender := range g.extenders {
 			if !extender.IsInterested(pod) {
