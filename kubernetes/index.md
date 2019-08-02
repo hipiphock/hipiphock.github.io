@@ -525,6 +525,7 @@ checkNode라는 inner function을 정의한 뒤, 이를 parallelize하게 돌린
 	return filtered, failedPredicateMap, nil
 }
 ```
+filter된 결과가 아니 이거 뭐지?
 
 ### podFitsOnNode
 node를 실질적으로 filtering하는 함수이다.
@@ -627,9 +628,14 @@ Predicate를 두번 하는 경우가 있다. node가 현재 pod보다 더 우선
 	return len(failedPredicates) == 0, failedPredicates, nil
 }
 ```
-특정 경우에는 predicate를 두번 수행하게 된다. 만약 node가 지명된 pod로 더 높거나 같은 우선순위를 가진 pode를 가지고 있다면 우리는 그 pod를 meta와 nodeInfo에 추가한다.
+위의 주석에 따라 실제로 두번 돌리는 코드이다.
 
-만약 모든 predicate가 성공한다면, 지명된 pod가 추가되지 않았을 때 돌린다.
+첫 loop에서는 더 높거나 같은 우선순위의 pod만을 따게 된다.
+``` go
+if i == 0 {
+	podsAdded, metaToUse, nodeInfoToUse = addNominatedPods(pod, meta, info, queue)
+```
+
 
 ## prioritizing
 `PrioritizeNodes` 함수에서 점수를 준다. 0-10점 사이로, 0은 제일 낮은 priority, 10은 제일 높은 priority다.
