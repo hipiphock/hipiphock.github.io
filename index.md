@@ -1,4 +1,4 @@
-[Home](https://hipiphock@github.io)
+[Home](https://hipiphock.github.io)
 
 ## Lab intern
 1. [cgroup](https://hipiphock.github.io/cgroup)
