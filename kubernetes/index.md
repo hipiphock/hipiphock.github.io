@@ -640,7 +640,7 @@ if i == 0 {
 ```
 여기에서 `addNominatedPods()`는 같거나 더 높은 우선순위를 가진 pod에서 일어난다.
 
-
+두 번째 loop에서는 `failedPredicate
 
 ## prioritizing
 priority는 `PrioritizeNodes()` 함수를 통해서 결정된다.
