@@ -558,6 +558,7 @@ func podFitsOnNode(
 * Preempt에서 불리게 된 경우, preemption의 victim을 없애고 해당 pod를 넣어야 한다.
   
   * 이때, victim의 선택은 `SelectVictimsOnNode()`를 통해서 결정한다.
+
 ``` go
 	var failedPredicates []predicates.PredicateFailureReason
 
