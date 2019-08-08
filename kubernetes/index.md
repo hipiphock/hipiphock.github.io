@@ -31,9 +31,6 @@ Kubernetes는 container(s)를 **pod**라는 high-level structure로 포장을 �
 **Pod**가 Kubernetes에서의 basic unit이지만, pod가 직접적으로 cluster에서 실행이 되지는 않는다. **Deployment**는 pod의 replica가 얼마나 있는지를 보여주는 역할을 하며, 이는 나중에 cluster가 notify된 수만큼의 pod를 돌릴 수 있도록 한다. pod가 죽으면 deployment는 자동으로 다시 만든다.
 
 ### Ingress
-cluster와 
+Kubernetes는 기본적으로 pod와 외부 환경 사이를 격리한다. Pod가 외부 환경과 통신을 하기 위해서는 **ingress**가 필요하다.
 
-이 Node는 나중에 Pod가 동작하는데 쓰이게 된다.
- * Pod: Kubernetes에서 실행되는 app의 가장 기본적인 구성단위.
-Pod는 application의 container(s), storage resource, unique IP, 그 외에 option들을 가지고 있다.
-
+Ingress는 통신을 위한 channel이고, 이를 cluster에 추가하기 위해서는 ingress controller나 LoadBalancer를 추가해야한다.
