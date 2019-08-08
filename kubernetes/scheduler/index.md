@@ -335,7 +335,9 @@ filtering과 관련해서 뭔가 하는 plugin인가보다.
 	if err := g.snapshot(); err != nil {
 		return result, err
 	}
-
+```
+basic check - node가 있는지 없는지, err가 있는지 없는지 확인하는 단계
+``` go
 	trace.Step("Basic checks done")
 	startPredicateEvalTime := time.Now()
 	filteredNodes, failedPredicateMap, err := g.findNodesThatFit(pluginContext, pod, nodes)
@@ -495,6 +497,8 @@ func (g *genericScheduler) findNodesThatFit(pluginContext *framework.PluginConte
 checkNode라는 inner function을 정의한 뒤, 이를 parallelize하게 돌린다.
 
 `podFitsOnNode()`함수를 통해 predicate function에 맞게 filtering을 한다.
+
+일정 수의 node를 확보하게 되면 predicate를 멈춘다.
 ``` go
 	if len(filtered) > 0 && len(g.extenders) != 0 {
 		for _, extender := range g.extenders {
@@ -528,7 +532,7 @@ checkNode라는 inner function을 정의한 뒤, 이를 parallelize하게 돌린
 	return filtered, failedPredicateMap, nil
 }
 ```
-filter된 결과가 아니 이거 뭐지?
+filter된 결과
 
 ### podFitsOnNode
 node를 실질적으로 filtering하는 함수이다.
