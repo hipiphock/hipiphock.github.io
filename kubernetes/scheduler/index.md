@@ -18,6 +18,9 @@ Kubernetes는 user가 정의한 scheduler를 실행시킬 수 있으며, 아니�
 어떠한 방식을 사용하느냐에 따라서 작동하는 코드가 달라지는 듯 하다. 아직 정확한 원리는 모르겠다.
 
 ## User-made scheduler
+사용자가 만든 scheduler의 경우, `Run()`함수를 통해서 scheduling을 한다.
+`Run()`에서 multithreading을 통해 `scheduleOne()`을 돌리게 되며,
+`scheduleOne()`에서 실질적인 scheduling을 하게 된다.
 
 ### Run()
 ``` go
@@ -266,10 +269,10 @@ func (sched *Scheduler) schedule(pod *v1.Pod, pluginContext *framework.PluginCon
 Algorithm? pod? deepcopy?
 
 ## Basic scheduler
-
 Kubernetes에서는 기본적으로 generic scheduler가 있다. 이 generic scheduler는 pre-implemented algorithm들과 policy들이 있다.
 
 기존에 봤던 코드들은 custom made scheduler에 대해서 돌아가는 함수들이며, default scheduler는 generic scheduler에 정의되어 있다.
+
 ``` go
 type genericScheduler struct {
 	cache                    internalcache.Cache
@@ -291,9 +294,10 @@ type genericScheduler struct {
 	enableNonPreempting      bool
 }
 ```
-`genericScheduler`는 다음과 같은 멤버들을 가지고 있다.
+기본적인 scheduler는 `genericScheduler`라는 구조체를 사용한다. `genericScheduler`는 다음과 같은 멤버들을 가지고 있다.
 
-아니 진짜 모르는게 너무 많잖아... ㅠㅠ
+기본 scheduler의 경우, `Schedule()`(대소문자가 다름에 주의하자)함수를 통해서 scheduling을 한다.
+함수 내에서 predicate와 prioritize를 진행하며, 이들을 관장하는 함수는 각각 `findNodesThatFit()`과 `PrioritizeNodes()`이다.
 ``` go
 // Schedule tries to schedule the given pod to one of the nodes in the node list.
 // If it succeeds, it will return the name of the node.
