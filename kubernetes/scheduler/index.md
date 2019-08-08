@@ -692,8 +692,9 @@ func PrioritizeNodes(
 
 
 	results := make([]schedulerapi.HostPriorityList, len(priorityConfigs), len(priorityConfigs))
-
-
+```
+얘네들은 뭐하는 애들이지
+``` go
 	// DEPRECATED: we can remove this when all priorityConfigs implement the
 	// Map-Reduce pattern.
 	for i := range priorityConfigs {
@@ -711,8 +712,10 @@ func PrioritizeNodes(
 			results[i] = make(schedulerapi.HostPriorityList, len(nodes))
 		}
 	}
-
-
+```
+DEPRECATED가 주석에 있는 것으로 보아하니 priorityConfig가 map-reduce pattern을 구현하면 없어질 것 같다.
+이게 있는 이유는 현재 map에서? 뭐지?
+``` go
 	workqueue.ParallelizeUntil(context.TODO(), 16, len(nodes), func(index int) {
 		nodeInfo := nodeNameToInfo[nodes[index].Name]
 		for i := range priorityConfigs {
