@@ -1,5 +1,3 @@
-[Home](https://hipiphock.github.io/)
-
 # Overview
 Completely Fair Scheduler는 linux kernel의 기본 scheduler로, **모든 task가 똑같은 시간동안 작동할 수 있도록 하는 scheduler이다.**
 

@@ -1,5 +1,3 @@
-[Home](https://hipiphock.github.io/)
-
 # Overview
 Scheduling latency는 모든 task들을 적어도 한번씩 돌리는데 소요되는 시간을 의미한다.
 

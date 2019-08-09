@@ -1,5 +1,3 @@
-[Home](https://hipiphock.github.io)
-
 # Overview
 Kubernetes에서의 scheduling이란 pod에다가 node를 할당하는 것을 의미한다.
 

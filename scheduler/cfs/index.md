@@ -1,5 +1,3 @@
-[Home](https://hipiphock.github.io/)
-
 [latency](https://hipiphock.github.io/scheduler/cfs/latency)
 
 [tick](https://hipiphock.github.io/scheduler/cfs/tick)

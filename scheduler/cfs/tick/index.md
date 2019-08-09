@@ -1,5 +1,3 @@
-[Home](https://hipiphock.github.io/)
-
 # Overview
 세밀한 단위의 시간을 제어하기 위해 linux kernel은 **high resolution timer**를 사용하고 있다.
 

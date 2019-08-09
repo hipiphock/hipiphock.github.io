@@ -1,5 +1,3 @@
-[Home](https://hipiphock.github.io/)
-
 [test1](https://hipiphock.github.io/cgroup/test1)
 
 [test2](https://hipiphock.github.io/cgroup/test2)
