@@ -5,3 +5,25 @@ main:
     url: /scheduler
   - title: "kubernetes"
     url: /kubernetes
+
+docs:
+  - title: cgroup
+    children:
+      - title: "Overview"
+        url: /cgroup/overview
+      - title: "test 1"
+        url: /cgroup/test1
+      - title: "test 2"
+        url: /cgroup/test2
+  - title: scheduler
+    children:
+      - title: "Completely Fair Scheduler"
+        url: /scheduler/cfs
+      - title: "Context Switch"
+        url: /scheduler/context-switch
+  - title: kubernetes
+    children:
+      - title: "Overview"
+        url: /kuberntes
+      - title: "Scheduelr"
+        url: /kubernetes/scheduler
