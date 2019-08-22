@@ -404,20 +404,19 @@ predicate가 끝난다면 prioritize를 해야하지만, 만약 node의 수가 1
 Prioritizing이 끝난 이후에는 `selectHost()`함수를 통해서 node를 선택한다. 그냥 linear하게 max score을 찾는다.
 
 ### findNodesThatFit()
-predicate를 하는 함수이다.
+Predication을 담당하는 함수이다.
 ``` go
 // Filters the nodes to find the ones that fit based on the given predicate functions
 // Each node is passed through the predicate functions to determine if it is a fit
-func (g *genericScheduler) findNodesThatFit(pluginContext *framework.PluginContext, pod *v1.Pod, nodes []*v1.Node) ([]*v1.Node, FailedPredicateMap, error) {
+func (g *genericScheduler) findNodesThatFit(pluginContext *framework.PluginContext, pod *v1.Pod) ([]*v1.Node, FailedPredicateMap, framework.NodeToStatusMap, error) {
 	var filtered []*v1.Node
 	failedPredicateMap := FailedPredicateMap{}
-
-
-	if len(g.predicates) == 0 {
-		filtered = nodes
+	filteredNodesStatuses := framework.NodeToStatusMap{}
 ```
-`g.predicates`가 무슨 뜻이지? predicate에도 무슨 level같은게 있나?
+`findNodesThatFit()`함수는 변수로 pluginContext와 pod를 받는다. 
 ``` go
+	if len(g.predicates) == 0 {
+		filtered = g.cache.ListNodes()
 	} else {
 		allNodes := int32(g.cache.NodeTree().NumNodes())
 		numNodesToFind := g.numFeasibleNodesToFind(allNodes)
