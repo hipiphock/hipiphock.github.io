@@ -404,7 +404,7 @@ predicate가 끝난다면 prioritize를 해야하지만, 만약 node의 수가 1
 Prioritizing이 끝난 이후에는 `selectHost()`함수를 통해서 node를 선택한다. 그냥 linear하게 max score을 찾는다.
 
 ### findNodesThatFit()
-Predication을 담당하는 함수이다.
+Predication을 담당하는 함수이다. 걸러낸 node와 map, status, err를 return한다.
 ``` go
 // Filters the nodes to find the ones that fit based on the given predicate functions
 // Each node is passed through the predicate functions to determine if it is a fit
@@ -413,7 +413,7 @@ func (g *genericScheduler) findNodesThatFit(pluginContext *framework.PluginConte
 	failedPredicateMap := FailedPredicateMap{}
 	filteredNodesStatuses := framework.NodeToStatusMap{}
 ```
-`findNodesThatFit()`함수는 변수로 pluginContext와 pod를 받는다. 
+`findNodesThatFit()`함수는 변수로 pluginContext와 pod를 받는다.
 ``` go
 	if len(g.predicates) == 0 {
 		filtered = g.cache.ListNodes()
