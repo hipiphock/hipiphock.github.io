@@ -301,6 +301,9 @@ type genericScheduler struct {
 // If it succeeds, it will return the name of the node.
 // If it fails, it will return a FitError error with reasons.
 func (g *genericScheduler) Schedule(pod *v1.Pod, nodeLister algorithm.NodeLister, pluginContext *framework.PluginContext) (result ScheduleResult, err error) {
+```
+함수가 받는 parameter를 보면 Pod, nodeLister, Plugin 등이 있음을 알 수 있다. 성공시 node의 이름을 return하고, 실패시 error를 return한다.
+``` go
 	trace := utiltrace.New(fmt.Sprintf("Scheduling %s/%s", pod.Namespace, pod.Name))
 	defer trace.LogIfLong(100 * time.Millisecond)
 
@@ -308,9 +311,11 @@ func (g *genericScheduler) Schedule(pod *v1.Pod, nodeLister algorithm.NodeLister
 		return result, err
 	}
 ```
-Generic scheduler의 `Schedule()`함수는 주어진 pod를 node list에 있는 한 node와 짝지어준다.
-
 tracing은 `defer`를 통해서 최대한 나중에 실행될 수 있도록 한다.
+
+`podPassesBasicChecks()`에서는 pod가 사용하는 PVC를 체크한다. PVC와 관련된 듯 하다.
+
+https://github.com/kubernetes/kubernetes/blob/ebf15029da1e413365e8e728f0e873a717cf29e7/pkg/scheduler/core/generic_scheduler.go#L1212-L1236
 ``` go
 	// Run "prefilter" plugins.
 	prefilterStatus := g.framework.RunPrefilterPlugins(pluginContext, pod)
@@ -318,15 +323,14 @@ tracing은 `defer`를 통해서 최대한 나중에 실행될 수 있도록 한�
 		return result, prefilterStatus.AsError()
 	}
 ```
-filtering과 관련해서 뭔가 하는 plugin인가보다.
+Prefiltering 과정은 `RunPrefilterPlugins()`를 통해서 일어난다. 
+
+https://github.com/kubernetes/kubernetes/blob/ebf15029da1e413365e8e728f0e873a717cf29e7/pkg/scheduler/framework/v1alpha1/framework.go#L286-L307
 
 실패하면 error와 result를 return한다.
 ``` go
-	nodes := nodeLister.ListNodes()
-	if err != nil {
-		return result, err
-	}
-	if len(nodes) == 0 {
+	numNodes := g.cache.NodeTree().NumNodes()
+	if numNodes == 0 {
 		return result, ErrNoNodesAvailable
 	}
 
@@ -334,7 +338,7 @@ filtering과 관련해서 뭔가 하는 plugin인가보다.
 		return result, err
 	}
 ```
-basic check - node가 있는지 없는지, err가 있는지 없는지 확인하는 단계
+node를 가져온다. node의 수가 0개이면 available한 node가 없다는 메세지와 함께 return한다.
 ``` go
 	trace.Step("Basic checks done")
 	startPredicateEvalTime := time.Now()
@@ -355,11 +359,6 @@ basic check - node가 있는지 없는지, err가 있는지 없는지 확인하�
 	metrics.DeprecatedSchedulingAlgorithmPredicateEvaluationDuration.Observe(metrics.SinceInMicroseconds(startPredicateEvalTime))
 	metrics.SchedulingLatency.WithLabelValues(metrics.PredicateEvaluation).Observe(metrics.SinceInSeconds(startPredicateEvalTime))
 	metrics.DeprecatedSchedulingLatency.WithLabelValues(metrics.PredicateEvaluation).Observe(metrics.SinceInSeconds(startPredicateEvalTime))
-```
-predication은 여기에서 발생한다. `findNodesThatFit()`을 통해서 node들을 가져오며, 만약 가져온 node의 수가 0개라면 error를 return하게 된다.
-
-`metrics`가 무슨 작업을 하는지는 난 잘 모르겠다.
-``` go
 	startPriorityEvalTime := time.Now()
 	// When only one node after predicate, just use it.
 	if len(filteredNodes) == 1 {
@@ -372,6 +371,10 @@ predication은 여기에서 발생한다. `findNodesThatFit()`을 통해서 node
 		}, nil
 	}
 ```
+predication은 여기에서 발생한다. `findNodesThatFit()`을 통해서 node들을 가져오며, 만약 가져온 node의 수가 0개라면 error를 return하게 된다.
+
+`metrics`는 **prometheus metrics**인 듯 하다.
+
 predicate가 끝난다면 prioritize를 해야하지만, 만약 node의 수가 1개라면 그런 것이 의미가 없으니 그냥 바로 매칭시켜버린다.
 
 그렇지 않다면 prioritize 작업을 한다.
@@ -396,7 +399,9 @@ predicate가 끝난다면 prioritize를 해야하지만, 만약 node의 수가 1
 	}, err
 }
 ```
-`PrioritizeNodes()`함수를 통해서 prioritize를 하는데, 이는 아래에서 더 자세하게 보도록 하자.
+`PrioritizeNodes()`함수를 통해서 prioritize를 한다.
+
+Prioritizing이 끝난 이후에는 `selectHost()`함수를 통해서 node를 선택한다. 그냥 linear하게 max score을 찾는다.
 
 ### findNodesThatFit()
 predicate를 하는 함수이다.
