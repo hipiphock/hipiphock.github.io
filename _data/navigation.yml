@@ -76,43 +76,25 @@ projects:
 
 # studies
 studies:
-  - title: "Parent Page A"
+  - title: "Cgroup"
     children:
-      - title: "Child Page A1"
-        url: /
-      - title: "Child Page A2"
-        url: /
-      - title: "Child Page A3"
-        url: /
-      - title: "Child Page A4"
-        url: /
-  - title: "Parent Page B"
+      - title: "Overview"
+        url: /studies/cgroup/overview/
+      - title: "Test 1"
+        url: /studies/cgroup/test1/
+      - title: "Test 2"
+        url: /studies/cgroup/test2/
+  - title: "Linux Scheduler"
     children:
-      - title: "Child Page B1"
-        url: /
-      - title: "Child Page B2"
-        url: /
-      - title: "Child Page B3"
-        url: /
-      - title: "Child Page B4"
-        url: /
-      - title: "Child Page B5"
-        url: /
-  - title: "Parent Page C"
+      - title: "Overview"
+        url: /studies/schedueler/
+      - title: "Completely Fair Scheduler"
+        url: /studies/cfs/
+      - title: "Context Switch"
+        url: /studies/context-switch/
+  - title: "Kubernetes"
     children:
-      - title: "Child Page C1"
-        url: /
-      - title: "Child Page C2"
-        url: /
-      - title: "Child Page C3"
-        url: /
-      - title: "Child Page C4"
-        url: /
-      - title: "Child Page C5"
-        url: /
-  - title: "Parent Page D"
-    children:
-      - title: "Child Page D1"
-        url: /
-      - title: "Child Page D2"
-        url: /
+      - title: "Overview"
+        url: /kubernetes/
+      - title: "Scheduler in Kubernetes"
+        url: /kubernetes/scheduler/

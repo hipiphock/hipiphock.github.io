@@ -7,4 +7,5 @@ redirect_from:
   - /theme-setup/
 toc: true
 ---
-### adflkasfjal;sfj;a
+# Studying is fun
+really.
