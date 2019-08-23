@@ -294,7 +294,7 @@ defaults:
       related: true
   # about
   - scope:
-      path: ""
+      path: "about"
       type: docs
     values:
       layout: single
@@ -306,7 +306,7 @@ defaults:
         nav: "docs"
   # projects
   - scope:
-      path: ""
+      path: "projects"
       type: projects
     values:
       layout: single
@@ -318,7 +318,7 @@ defaults:
         nav: "projects"
   # studies
   - scope:
-      path: ""
+      path: "studies"
       type: studies
     values:
       layout: single
