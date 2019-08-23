@@ -18,7 +18,7 @@ main:
   #   url: /sitemap/
 
 # documentation links
-docs:
+projects:
   - title: ASDF
     children:
       - title: "Quick-Start Guide"
@@ -75,7 +75,7 @@ docs:
         url: /terms/
 
 # sidebar navigation list sample
-sidebar-sample:
+studies:
   - title: "Parent Page A"
     children:
       - title: "Child Page A1"
