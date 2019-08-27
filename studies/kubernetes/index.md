@@ -1,5 +1,6 @@
 ---
 title: Kubernetes
+permalink: /studies/kubernetes/
 layout: single
 last_modified_at: 2019-08-20T21:36:11-04:00
 redirect_from:
