@@ -61,7 +61,7 @@ studies:
   - title: Cgroup
     children:
       - title: "Overview"
-        url: /studies/cgroup/overview/
+        url: /studies/cgroup/
       - title: "Test 1"
         url: /studies/cgroup/test1/
       - title: "Test 2"
