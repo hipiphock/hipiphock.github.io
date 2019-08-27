@@ -1,3 +1,15 @@
+---
+title: "Scheduler Tick"
+permalink: /studies/scheduler/cfs/tick/
+excerpt: "Linux Scheduler"
+layout: single
+last_modified_at: 2019-08-20T21:36:11-04:00
+redirect_from:
+  - /theme-setup/
+toc: true
+sidebar:
+  nav: "studies"
+---
 # Overview
 세밀한 단위의 시간을 제어하기 위해 linux kernel은 **high resolution timer**를 사용하고 있다.
 

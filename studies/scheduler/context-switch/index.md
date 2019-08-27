@@ -1,3 +1,15 @@
+---
+title: "Context Switch"
+permalink: /studies/scheduler/context-switch/
+excerpt: "Linux Scheduler"
+layout: single
+last_modified_at: 2019-08-20T21:36:11-04:00
+redirect_from:
+  - /theme-setup/
+toc: true
+sidebar:
+  nav: "studies"
+---
 # Overview
 `schedule()`함수는 context switch를 관장하는 함수이다.
 

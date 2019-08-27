@@ -1,3 +1,15 @@
+---
+title: "Cgroup"
+permalink: /studies/cgroup/test2/
+excerpt: "Linux Scheduler"
+layout: single
+last_modified_at: 2019-08-20T21:36:11-04:00
+redirect_from:
+  - /theme-setup/
+toc: true
+sidebar:
+  nav: "studies"
+---
 # Overview
 저번에 cgroup을 통해서 CPU의 core 자원을 제한하는 실험을 했었다.
   

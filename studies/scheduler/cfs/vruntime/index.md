@@ -1,3 +1,15 @@
+---
+title: "Virtual Runtime"
+permalink: /studies/scheduler/cfs/vruntime
+excerpt: "Linux Scheduler"
+layout: single
+last_modified_at: 2019-08-20T21:36:11-04:00
+redirect_from:
+  - /theme-setup/
+toc: true
+sidebar:
+  nav: "studies"
+---
 # Overview
 Completely Fair Scheduler는 linux kernel의 기본 scheduler로, **모든 task가 똑같은 시간동안 작동할 수 있도록 하는 scheduler이다.**
 

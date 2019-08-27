@@ -1,3 +1,15 @@
+---
+title: "Latency"
+permalink: /studies/scheduler/cfs/latency/
+excerpt: "Linux Scheduler"
+layout: single
+last_modified_at: 2019-08-20T21:36:11-04:00
+redirect_from:
+  - /theme-setup/
+toc: true
+sidebar:
+  nav: "studies"
+---
 # Overview
 Scheduling latency는 모든 task들을 적어도 한번씩 돌리는데 소요되는 시간을 의미한다.
 

@@ -1,3 +1,15 @@
+---
+title: "Kubernetes Scheduler"
+permalink: /studies/kubernetes/scheduler/
+excerpt: "Linux Scheduler"
+layout: single
+last_modified_at: 2019-08-20T21:36:11-04:00
+redirect_from:
+  - /theme-setup/
+toc: true
+sidebar:
+  nav: "studies"
+---
 # Overview
 Kubernetes에서의 scheduling이란 pod에다가 node를 할당하는 것을 의미한다.
 
