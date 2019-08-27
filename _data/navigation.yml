@@ -19,7 +19,7 @@ main:
 
 # projects
 projects:
-  - title: ASDF
+  - title: "Temp"
     children:
       - title: "Quick-Start Guide"
         url: /docs/quick-start-guide/
@@ -29,7 +29,7 @@ projects:
         url: /docs/installation/
       - title: "Upgrading"
         url: /docs/upgrading/
-  - title: QWER
+  - title: "asdf"
     children:
       - title: "Configuration"
         url: /docs/configuration/
@@ -43,7 +43,7 @@ projects:
         url: /docs/authors/
       - title: "Layouts"
         url: /docs/layouts/
-  - title: ZXCV
+  - title: "qwer"
     children:
       - title: "Working with Posts"
         url: /docs/posts/
@@ -55,24 +55,6 @@ projects:
         url: /docs/helpers/
       - title: "Utility Classes"
         url: /docs/utility-classes/
-  - title: Extras
-    children:
-      - title: "Stylesheets"
-        url: /docs/stylesheets/
-      - title: "JavaScript"
-        url: /docs/javascript/
-  - title: Meta
-    children:
-      - title: "History"
-        url: /docs/history/
-      - title: "Contributing"
-        url: /docs/contributing/
-      - title: "Old 2.2 Docs"
-        url: /docs/docs-2-2/
-      - title: "License"
-        url: /docs/license/
-      - title: "Terms &amp; Privacy Policy"
-        url: /terms/
 
 # studies
 studies:
