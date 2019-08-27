@@ -58,7 +58,7 @@ projects:
 
 # studies
 studies:
-  - title: "Cgroup"
+  - title: Cgroup
     children:
       - title: "Overview"
         url: /studies/cgroup/overview/
@@ -66,7 +66,7 @@ studies:
         url: /studies/cgroup/test1/
       - title: "Test 2"
         url: /studies/cgroup/test2/
-  - title: "Linux Scheduler"
+  - title: Linux Scheduler
     children:
       - title: "Overview"
         url: /studies/schedueler/
@@ -74,7 +74,7 @@ studies:
         url: /studies/cfs/
       - title: "Context Switch"
         url: /studies/context-switch/
-  - title: "Kubernetes"
+  - title: Kubernetes
     children:
       - title: "Overview"
         url: /kubernetes/
