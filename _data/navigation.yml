@@ -69,14 +69,14 @@ studies:
   - title: Linux Scheduler
     children:
       - title: "Overview"
-        url: /studies/schedueler/
+        url: /studies/scheduler/
       - title: "Completely Fair Scheduler"
-        url: /studies/cfs/
+        url: /studies/scheduler/cfs/
       - title: "Context Switch"
-        url: /studies/context-switch/
+        url: /studies/scheduler/context-switch/
   - title: Kubernetes
     children:
       - title: "Overview"
-        url: /kubernetes/
+        url: /studies/kubernetes/
       - title: "Scheduler in Kubernetes"
-        url: /kubernetes/scheduler/
+        url: /studies/kubernetes/scheduler/
