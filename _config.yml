@@ -326,3 +326,14 @@ defaults:
       comments: false
       sidebar:
         nav: "studies"
+  - scope:
+      path: "memos"
+      type: memos
+    values:
+      layout: single
+      read_time: false
+      author_profile: false
+      share: false
+      comments: false
+      sidebar:
+        nav: "memos"
