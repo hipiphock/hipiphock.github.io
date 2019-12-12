@@ -7,4 +7,6 @@ redirect_from:
   - /theme-setup/
 toc: true
 ---
-# DOSMAS IS DELICIOUS
+# Undergraduate Student in Hanyang University
+I am currently an undergraduate student in Hanyang University in Seoul,
+  and I am looking forward to go to graduate school.
