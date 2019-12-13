@@ -21,7 +21,7 @@ main:
 
 # projects
 projects:
-  - title: "Temp"
+  - title: Temp
     children:
       - title: "tmpmenu"
         url: /projects/
@@ -57,3 +57,11 @@ memos:
       children:
           - title: "Memo"
             url: /memos/
+    - title: Ideas
+      children:
+          - title: "Ideas"
+            url: /ideas/
+    - title: Things To Do
+      children:
+          - title: "TODO lists"
+            url: /todo/
