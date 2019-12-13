@@ -10,9 +10,6 @@ toc: true
 sidebar:
   nav: "studies"
 ---
-[context switch](https://hipiphock.github.io/scheduler/context-switch)
-
-[completely fair scheduler](https://hipiphock.github.io/scheduler/cfs)
 
 # Overview
 기본적인 linux kernel의 scheduler에 대한 설명

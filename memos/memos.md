@@ -10,4 +10,9 @@ toc: true
 sidebar:
   nav: "memos"
 ---
-# Memo Memo SpongeBob
+# TODO:
+ 1. 공부해야지
+ 2. Finish making the github pages including
+   * Projects
+   * Memos
+   * And other functions that you are not using due to your stupidness.

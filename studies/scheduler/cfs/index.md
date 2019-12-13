@@ -10,11 +10,6 @@ toc: true
 sidebar:
   nav: "studies"
 ---
-[latency](https://hipiphock.github.io/scheduler/cfs/latency)
-
-[tick](https://hipiphock.github.io/scheduler/cfs/tick)
-
-[vruntime](https://hipiphock.github.io/scheduler/cfs/vruntime)
 
 # Overview
 Completely Fair Scheduler는 linux kernel의 기본 scheduler로, **모든 task가 똑같은 시간동안 작동할 수 있도록 하는 scheduler이다.**
