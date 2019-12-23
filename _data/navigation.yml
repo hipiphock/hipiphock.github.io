@@ -21,10 +21,10 @@ main:
 
 # projects
 projects:
-  - title: Temp
+  - title: Graduation
     children:
-      - title: "tmpmenu"
-        url: /projects/
+      - title: "Overview"
+        url: /projects/gradproj/
 
 # studies
 studies:
