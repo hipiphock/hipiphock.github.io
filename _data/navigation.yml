@@ -64,4 +64,4 @@ memos:
     - title: Things To Do
       children:
           - title: "TODO lists"
-            url: /todo/
+            url: /memos/todo/

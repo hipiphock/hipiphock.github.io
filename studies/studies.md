@@ -10,5 +10,12 @@ toc: true
 sidebar:
   nav: "studies"
 ---
-# Studying is fun
-really.
+These are the things I have studied:
+
+ * cgroup in Linux
+
+ * Docker & Container
+
+ * Kubernetes
+
+ * Scheduler in Linux
