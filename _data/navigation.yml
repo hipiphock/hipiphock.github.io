@@ -36,6 +36,10 @@ studies:
         url: /studies/cgroup/test1/
       - title: "Test 2"
         url: /studies/cgroup/test2/
+  - title: Docker & Container
+    children:
+      - title: "Overview"
+        url: /studies/container/
   - title: Linux Scheduler
     children:
       - title: "Overview"
@@ -59,8 +63,8 @@ memos:
             url: /memos/
     - title: Ideas
       children:
-          - title: "Ideas"
-            url: /ideas/
+          - title: "Elavator Problem"
+            url: /ideas/elavator/
     - title: Things To Do
       children:
           - title: "TODO lists"
