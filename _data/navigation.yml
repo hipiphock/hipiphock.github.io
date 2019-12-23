@@ -17,6 +17,10 @@ projects:
     children:
       - title: "Overview"
         url: /projects/gradproj/
+  - title: Making DBMS
+    children:
+      - title: "Overview"
+        url: /projects/makeDBMS/
 
 # studies
 studies:
@@ -56,7 +60,7 @@ memos:
     - title: Ideas
       children:
           - title: "Elavator Problem"
-            url: /ideas/elavator/
+            url: /memos/ideas/elavator/
     - title: Things To Do
       children:
           - title: "TODO lists"
