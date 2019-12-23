@@ -11,7 +11,6 @@ sidebar:
   nav: "studies"
 ---
 
-# Overview
 기본적인 linux kernel의 scheduler에 대한 설명
 
 현재 가장 stable한 버전인 v5.1.15를 보면서 작성하였다.

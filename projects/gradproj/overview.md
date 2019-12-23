@@ -1,11 +1,10 @@
 ---
-title: "Projects"
-permalink: /projects/
+title: "Graduation Project"
+permalink: /projects/gradproj/
 excerpt: "How to quickly install and setup Minimal Mistakes for use with GitHub Pages."
 last_modified_at: 2019-08-20T21:36:11-04:00
 redirect_from:
   - /theme-setup/
 toc: true
 ---
-## New Projects:
- * Graduation Project
+To graduate, 

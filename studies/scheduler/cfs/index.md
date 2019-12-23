@@ -11,7 +11,6 @@ sidebar:
   nav: "studies"
 ---
 
-# Overview
 Completely Fair Scheduler는 linux kernel의 기본 scheduler로, **모든 task가 똑같은 시간동안 작동할 수 있도록 하는 scheduler이다.**
 
 Red-black tree 자료구조를 통해서 task들을 관리하고, 각각의 task의 virtual runtime을 통해서 정렬을 한다.

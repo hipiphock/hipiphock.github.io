@@ -9,10 +9,8 @@ toc: true
 sidebar:
   nav: "studies"
 ---
-# Overview
-**Kubernetes (K8s) is an open-source system for automating deployment, scaling, and management of containerized applications.**
 
-[Kubernetes Scheduler](https://hipiphock.github.io/studies/kubernetes/scheduler)
+**Kubernetes (K8s) is an open-source system for automating deployment, scaling, and management of containerized applications.**
 
 # Basic Concepts
 Kubernetes에서는 굉장히 많은 추상적인 개념이 나오며, 이를 확실히 정리하는 것은 이해하는데 매우 도움이 된다.
