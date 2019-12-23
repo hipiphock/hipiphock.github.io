@@ -8,11 +8,7 @@ toc: true
 sidebar:
   nav: "studies"
 ---
-[test1](https://hipiphock.github.io/cgroup/test1)
 
-[test2](https://hipiphock.github.io/cgroup/test2)
-
-# cgroup
 **cgroup**은 linux에서 자원할당을 효율적으로 하기 위해서 존재하는 기능 중 하나이다.
 cgroup은 여러 task를 여러 group으로 나누고, 그 나눠진 group 내에서 resource를 관리한다.
 이 기능의 중요한 특징 중 하나는 **file system**을 이용해서 작업을 관리한다는 것이다.
