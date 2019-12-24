@@ -57,6 +57,9 @@ memos:
       children:
           - title: "Elavator Problem"
             url: /ideas/elavator/
+      children:
+          - title: "Icecream with Coffee"
+            url: /ideas/icecreamcoffee/
     - title: Things To Do
       children:
           - title: "TODO lists"

@@ -1,6 +1,6 @@
 ---
 title: "Memos"
-permalink: /memos/
+permalink: /memos/todo/
 excerpt: "Ideas and thoughts that suddenly come to my mind."
 layout: single
 last_modified_at: 2019-08-20T21:36:11-04:00
@@ -10,5 +10,9 @@ toc: true
 sidebar:
   nav: "memos"
 ---
-Container가 생겼음에도 불구하고 VM은 여전히 건재하다.
-Container에 어떠한 limitation이 있기 때문에 VM이 여전히 사용될까?
+# TODO:
+ 1. 공부해야지
+ 2. Finish making the github pages including
+   * Projects
+   * Memos
+   * And other functions that you are not using due to your stupidness.

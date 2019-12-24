@@ -1,6 +1,6 @@
 ---
 title: "Memos"
-permalink: /memos/
+permalink: /memos/ideas/elavator/
 excerpt: "Ideas and thoughts that suddenly come to my mind."
 layout: single
 last_modified_at: 2019-08-20T21:36:11-04:00
