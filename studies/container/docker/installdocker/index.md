@@ -19,12 +19,5 @@ sidebar:
    * Windows Server
 
 # Dockers for Windows
+Windows 10에 Docker를 설치하기 위해서는 우선 Hyper-V와 Container 기능을 켜야 한다. 그 이후에 Docker를 설치하면 깔-끔
 
-# Todo
-
-microservice 형태로 여러 개로 구축
-sock shop
-https://microservices-demo.github.io/
-microservice로 이루어짐 - 구축 해보기
-*구축할 때, server에다가
-나중에 영진이형이 접근할 수 있게

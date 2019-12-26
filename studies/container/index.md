@@ -16,5 +16,6 @@ sidebar:
 
 하지만, Virtual Machine의 등장과 함께, Linux machine에서 작동하는 app을 Windows에서도 돌릴 수 있게 되었다.
 
-문제는 VM의 속도와 자원에 있었으며, 이를 해결하기 위해 등장한 것이 container이다.
+문제는 VM의 속도와 자원에 있었으며, 이를 해결하기 위해 등장한 것이 container이다. **Docker**는 이 container의 orchestration을 하는 도구이다.
 
+# 
