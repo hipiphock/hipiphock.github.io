@@ -20,3 +20,4 @@ sidebar:
 
 **2번은 3번에 의해서 개발되었으며, 1번은 3번의 overall maintainer이다.**
 
+Technicall하게 다룰 docker는 당연하 2번이며, 앞으로도 계속 2번에 대해서 이야기를 할 것이다.

@@ -36,6 +36,9 @@ studies:
     children:
       - title: "Overview"
         url: /studies/container/
+    children:
+      - title: "Docker"
+        url: /studies/container/docker/
   - title: Linux Scheduler
     children:
       - title: "Overview"
