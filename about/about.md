@@ -10,4 +10,5 @@ toc: true
 ---
 # Undergraduate Student in Hanyang University
 I am currently an undergraduate student in Hanyang University in Seoul,
-  and I am looking forward to go to graduate school.
+
+and I am looking forward to go to graduate school.
