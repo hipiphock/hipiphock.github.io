@@ -17,8 +17,12 @@ Sock Shop은 Weaveworks에서 만든 **microservice demo application**으로, mi
 
 [Weaveworks](https://www.weave.works/)와 [Container Solution](https://www.container-solutions.com/)에 의해서 유지되고 관리받고 있다.
 
-## Sock Shop Microservice
-Sock Shop Microservice는 DNSㄹ르 통해서 다른 service를 찾는다.
+[Please see the official document for more information](https://microservices-demo.github.io/)
+
+## Basic Architecture
+기본적인 Architecture는 다음과 같다.
+![Architecture](https://github.com/microservices-demo/microservices-demo.github.io/blob/HEAD/assets/Architecture.png)
+그림과 같이 front-end에서 여러 API를 통해서 다른 Microservice와 통신을 하는 구조이다.
 
 ## Load Test
 load test는 container에 있는 test script를 packaging 한다.
@@ -30,3 +34,13 @@ https://microservices-demo.github.io/
 microservice로 이루어짐 - 구축 해보기
 *구축할 때, server에다가
 나중에 영진이형이 접근할 수 있게
+
+service discovery
+ - 다 클라우드에 있음
+ - 이를 edge 단으로 땡겨야 할까?
+사용자 요청 - API gate
+얘를 찾아내서 
+
+Netflix - Eureka
+
+구조
