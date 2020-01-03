@@ -38,6 +38,8 @@ studies:
         url: /studies/docker/
       - title: "Installing Docker"
         url: /studies/docker/installdocker/
+      - title: "Practice"
+        url: /studies/docker/practice/
   - title: Linux Scheduler
     children:
       - title: "Overview"
