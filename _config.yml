@@ -284,7 +284,7 @@ defaults:
   # about
   - scope:
       path: "about"
-      type: about
+      type: pages
     values:
       layout: single
       read_time: false
@@ -294,7 +294,7 @@ defaults:
   # projects
   - scope:
       path: "projects"
-      type: projects
+      type: posts
     values:
       layout: single
       read_time: false
@@ -306,7 +306,7 @@ defaults:
   # studies
   - scope:
       path: "studies"
-      type: studies
+      type: posts
     values:
       layout: single
       read_time: false
@@ -316,8 +316,19 @@ defaults:
       sidebar:
         nav: "studies"
   - scope:
+      path: "papers"
+      type: posts
+    values:
+      layout: single
+      read_time: false
+      author_profile: false
+      share: false
+      comments: false
+      sidebar:
+        nav: "papers"
+  - scope:
       path: "memos"
-      type: memos
+      type: drafts
     values:
       layout: single
       read_time: false

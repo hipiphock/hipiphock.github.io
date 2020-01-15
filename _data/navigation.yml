@@ -8,6 +8,8 @@ main:
     url: https://hipiphock.github.io/studies
   - title: "Memos"
     url: https://hipiphock.github.io/memos
+  - title: "Papers"
+    url: https://hipiphock.github.io/papers
   - title: "Quick-Start Guide"
     url: https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/
 
