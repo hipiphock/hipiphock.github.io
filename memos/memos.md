@@ -21,7 +21,7 @@ User와 cloud 사이의 latency를 줄이기 위해서 **Microservice의 일부�
 
 단순하게 생각해봐도 read-only app의 경우에는 latency를 크게 줄일 수 있다는 장점이 있을 것이다. 하지만 write의 경우, 결국 cloud에 있는 DB에 write를 해야하기 때문에, 적용할 수 없다는 문제점이 있다.
  
-# More Ideas
+## More Ideas
 Smart City?
 
 ## Microservice의 caching 사례
@@ -34,3 +34,12 @@ mobility?
 Streaming?
 
 edge - entrypoint가 여러개 - offloading
+
+# Smart Edge Caching
+Scenario: Edge가 prefetching해야하는 data가 있다.
+이때, data의 양이 방대해서 모든 data를 prefetching할 수 없다.
+이를 위해서 AI를 도입하고 선택적으로 높은 hit ratio를 보일 data만 prefetching을 하는 것이다.
+
+아니면 아니면
+prefetching해야 할 data가 있을 때,
+해당 data 전체를 받는 것이 아니라 일부만 받는 것이다.
