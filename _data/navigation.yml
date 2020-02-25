@@ -73,7 +73,7 @@ memos:
     - title: Ideas
       children:
           - title: "Elavator Problem"
-            url: /ideas/elavator/
+            url: /memos/ideas/elavator/
       children:
           - title: "Icecream with Coffee"
             url: /memos/ideas/icecreamcoffee/
