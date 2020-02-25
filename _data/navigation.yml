@@ -56,6 +56,12 @@ studies:
         url: /studies/kubernetes/
       - title: "Scheduler in Kubernetes"
         url: /studies/kubernetes/scheduler/
+  - title: WebRTC
+    children:
+      - title: "Overview"
+        url: /studies/webrtc/
+      - title: "Native API for WebRTC"
+        url: /studies/webrtc/nativeapi/
 
 # paper review
 papers:
