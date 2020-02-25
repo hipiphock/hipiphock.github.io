@@ -43,3 +43,7 @@ Scenario: Edge가 prefetching해야하는 data가 있다.
 아니면 아니면
 prefetching해야 할 data가 있을 때,
 해당 data 전체를 받는 것이 아니라 일부만 받는 것이다.
+
+# OpenGL
+화면을 띄어서
+server(edge) client(cloud)

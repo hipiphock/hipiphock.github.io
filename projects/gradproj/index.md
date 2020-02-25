@@ -40,5 +40,4 @@ IoT는 User에서 온 명령에 대해서 동작하고, 이에 따른 결과를 
  + 간단한 report를 생성할 수 있어야 한다.
 
 # Memo
-DB를 어떤 것을 써야 할까?
-Serial Connection - 
+Zigbee, Bluetooth 각각 한 명씩 담당

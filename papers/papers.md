@@ -8,6 +8,6 @@ redirect_from:
   - /theme-setup/
 toc: true
 sidebar:
-  nav: "studies"
+  nav: "papers"
 ---
 Paper Review Page.

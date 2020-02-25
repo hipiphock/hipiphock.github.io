@@ -6,10 +6,10 @@ main:
     url: https://hipiphock.github.io/projects
   - title: "Studies"
     url: https://hipiphock.github.io/studies
-  - title: "Memos"
-    url: https://hipiphock.github.io/memos
   - title: "Papers"
     url: https://hipiphock.github.io/papers
+  - title: "Memos"
+    url: https://hipiphock.github.io/memos
   - title: "Quick-Start Guide"
     url: https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/
 
@@ -56,6 +56,13 @@ studies:
         url: /studies/kubernetes/
       - title: "Scheduler in Kubernetes"
         url: /studies/kubernetes/scheduler/
+
+# paper review
+papers:
+    - title: Paper review
+      children:
+          - title: "Big Data Caching for Networking: Moving from Cloud to Edge"
+            url: /papers/7565185/
 
 # memos
 memos:
