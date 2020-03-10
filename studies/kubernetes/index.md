@@ -12,9 +12,6 @@ sidebar:
 
 **Kubernetes (K8s) is an open-source system for automating deployment, scaling, and management of containerized applications.**
 
-# Basic Concepts
-Kubernetes에서는 굉장히 많은 추상적인 개념이 나오며, 이를 확실히 정리하는 것은 이해하는데 매우 도움이 된다.
-
 ## Hardware
 ### Node
 기본적으로 machine 하나하나는 **node**라고 불리우며, 이는 Kubernetes에서 가장 작은 단위의 computing hardware이다.

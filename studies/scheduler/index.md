@@ -10,14 +10,11 @@ toc: true
 sidebar:
   nav: "studies"
 ---
-
-기본적인 linux kernel의 scheduler에 대한 설명
-
-현재 가장 stable한 버전인 v5.1.15를 보면서 작성하였다.
+본 문서는 현재 가장 stable한 버전인 v5.1.15를 기반으로 작성하였다.
 
 ## Task
 기본적으로 linux kernel은 task가 scheduling 되는 최소 단위가 된다.
-kernel thread와 user process와 user thread가 task가 된다.
+이때, kernel thread와 user process와 user thread가 task가 된다.
 
 ## Priority
 linux kernel의 scheduler는 priority에 따라서 어떤 scheduler를 사용할지, weight을 어떻게 설정할지를 결정한다.
@@ -28,7 +25,7 @@ priority에는 0 ~ 139까지 총 140단계가 있으며,
 
 ### Nice
 여기에서 CFS가 쓰는 priority는 user가 지정한 nice값을 변환한 것이며,
-nice는 -20~+19까지 총 40단계가 있다.
+nice는 -20부터 +19까지 총 40단계가 있다.
 여기에서 -20이 가장 높은 우선순위를 가지며, time slice를 많이 받는다.
 user가 process나 thread를 생성할 때의 nice 값은 0부터 시작한다.
 

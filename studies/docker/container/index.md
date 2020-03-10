@@ -10,7 +10,7 @@ toc: true
 sidebar:
   nav: "studies"
 ---
-*다음 document는 Docker_Deep_Dive (2017)을 토대로 작성되었습니다.
+**다음 document는 Docker_Deep_Dive (2017)을 토대로 작성되었습니다.**
 
 과거의 Application들은 OS, Architectural dependency를 가지고 있었기에 하나의 machine에서 작동하는 App을 다른 machine에서 돌릴 수가 없었다.
 
